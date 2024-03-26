@@ -1,5 +1,7 @@
 use clap::{command,Arg,ArgMatches};
 use url::Url;
+use linkify::{LinkFinder, LinkKind};
+use std::fs;
 
 fn cli()->ArgMatches{
 	let match_result=command!()
@@ -21,19 +23,27 @@ fn main() {
 		match std::fs::read_dir(folder_directory){
 			Ok(folder_path)=>{
 				for file_path in folder_path {
-					match file_path{
-						Ok(
-//					println!("succesfull");
-//					let file_path=file_path.to_string(); 	
-					match Url::parse(&file_path){
-						Ok(url)=>{
-							continue;
-						}
-						Err(e)=>{
-							println!("{}",file_path);
-						}	
-				//chekc if the file path is a working url probaly another mathc statement where if it is not a file run continue
-					}
+                    match fs::read_to_string(file_path.unwrap().path().into_os_string()){
+                        Ok(contents)=>{
+                            let finder= LinkFinder::new();
+                            let links: Vec<_>=finder.links(&contents).collect();
+                            for link in links{
+                                let link=link.as_str();
+                                match Url::parse(&link){
+                                    Ok(Url)=>{
+                                        continue;
+                                    }
+                                    Err(e)=>{
+                                        println!("{}",link);
+                                    }
+                                }                  
+                                
+                            }
+                        }
+                        Err(e)=>{
+                            continue;
+                        }
+				    }
 				}
 			}
 			Err(_e)=>{
