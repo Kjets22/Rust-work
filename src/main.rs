@@ -1,13 +1,13 @@
 use clap::{command,Arg,ArgMatches};
-use url::Url;
-use linkify::{LinkFinder, LinkKind};
+//use url::Url;
+use linkify::{LinkFinder};
 use std::fs;
-use reqwest::{get,StatusCode,blocking};
+use reqwest;
 
 
 
 fn cli()->ArgMatches{
-	let match_result=command!()
+	command!()
 	.about("give a folder with url files, the program will return broken urls")
 	.arg(
 		Arg::new("folder")
@@ -15,8 +15,7 @@ fn cli()->ArgMatches{
 		.help("input a folder directory to get broken urls")
 //		.value_parser(value_parser!(PathBuf))
 	)
-	.get_matches();
-	match_result
+	.get_matches()
 }
 
 fn main() {
@@ -41,7 +40,7 @@ fn main() {
                                         continue;
                                     }
                                     Err(_e)=>{
-                                        println!("{} broken link it works you not fucked",link);
+                                        println!("{}\n",link);
                                     }
                                 }                  
                                 
