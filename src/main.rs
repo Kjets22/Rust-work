@@ -1,5 +1,4 @@
 use clap::{command,Arg,ArgMatches};
-//use url::Url;
 use linkify::{LinkFinder};
 use std::fs;
 use reqwest;
@@ -13,16 +12,13 @@ fn cli()->ArgMatches{
 		Arg::new("folder")
 		.short('f')
 		.help("input a folder directory to get broken urls")
-//		.value_parser(value_parser!(PathBuf))
 	)
 	.get_matches()
 }
 
 fn main() {
-	//println!("working");
     let match_result=cli();
 	if let Some(folder_directory) = match_result.get_one::<String>("folder") {
-//		let folder_directory=match_result.get_one::<String>("folder");
 		match std::fs::read_dir(folder_directory){
 			Ok(folder_path)=>{
 				for file_path in folder_path {
@@ -31,12 +27,9 @@ fn main() {
                             let finder= LinkFinder::new();
                             let links: Vec<_>=finder.links(&contents).collect();
                             for link in links{
-                                let link=link.as_str();
-                                //let linkking=reqwest::blocking::get(link);
+                                let link=link.as_str(); 
                                 match reqwest::blocking::get(link){
                                     Ok(_l)=>{
-                                        //println!("{}",link);
-                                        //println!("running");
                                         continue;
                                     }
                                     Err(_e)=>{
